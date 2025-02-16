@@ -1,9 +1,9 @@
 package models
 
 type Transfer struct {
-	ReceiverID int
-	SenderID   int
-	Amount     int
+	ReceiverName string
+	SenderID     int
+	Amount       int
 }
 
 type ReceivedTransfer struct {

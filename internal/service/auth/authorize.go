@@ -5,14 +5,19 @@ import (
 	"errors"
 	"fmt"
 
+	errsdomain "github.com/Anton-Kraev/avito-test-assignment/internal/domain/errors"
 	"github.com/Anton-Kraev/avito-test-assignment/internal/domain/models"
+	"github.com/Anton-Kraev/avito-test-assignment/internal/lib/hash"
+	"github.com/Anton-Kraev/avito-test-assignment/internal/lib/tokens"
 	"github.com/Anton-Kraev/avito-test-assignment/internal/repository"
 )
+
+const initBalance = 200
 
 func (s *Service) Authorize(ctx context.Context, user models.User) (string, error) {
 	const op = "auth.Service.Authorize"
 
-	err := s.userRepo.FindByName(ctx, user.Name)
+	savedUser, err := s.userRepo.GetByName(ctx, user.Name)
 	if errors.Is(err, repository.ErrNotFound) {
 		user.Balance = initBalance
 		err = s.userRepo.Insert(ctx, user)
@@ -22,5 +27,9 @@ func (s *Service) Authorize(ctx context.Context, user models.User) (string, erro
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
 
-	return createToken()
+	if savedUser.Password != hash.GetPasswordHash(user.Password) {
+		return "", fmt.Errorf("%s: %w", op, errsdomain.ErrInvalidPassword)
+	}
+
+	return tokens.CreateJWTToken(user)
 }

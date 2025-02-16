@@ -20,11 +20,16 @@ func (s *Service) SendCoins(ctx context.Context, transfer models.Transfer) error
 		return fmt.Errorf("%s: %w", op, errors.ErrNotEnoughMoney)
 	}
 
-	if err = s.userRepo.UpdateBalanceByID(ctx, transfer.SenderID, -transfer.Amount); err != nil {
+	receiver, err := s.userRepo.GetByName(ctx, transfer.ReceiverName)
+	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	if err = s.userRepo.UpdateBalanceByID(ctx, transfer.ReceiverID, transfer.Amount); err != nil {
+	if err = s.userRepo.UpdateBalanceByID(ctx, receiver.ID, transfer.Amount); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if err = s.userRepo.UpdateBalanceByID(ctx, transfer.SenderID, -transfer.Amount); err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 

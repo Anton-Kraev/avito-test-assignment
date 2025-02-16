@@ -8,6 +8,7 @@ import (
 
 type (
 	userRepo interface {
+		GetByName(ctx context.Context, name string) (models.User, error)
 		GetBalanceByID(ctx context.Context, id int) (int, error)
 		UpdateBalanceByID(ctx context.Context, userID int, amount int) error
 	}

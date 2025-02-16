@@ -4,8 +4,6 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/labstack/echo/v4"
-
 	"github.com/Anton-Kraev/avito-test-assignment/internal/domain/models"
 )
 
@@ -38,24 +36,4 @@ func New(log *slog.Logger, authService authService, infoService infoService, pay
 		infoService:    infoService,
 		paymentService: paymentService,
 	}
-}
-
-func (h Handler) PostApiAuth(ctx echo.Context) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h Handler) GetApiBuyItem(ctx echo.Context, item string) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h Handler) GetApiInfo(ctx echo.Context) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h Handler) PostApiSendCoin(ctx echo.Context) error {
-	//TODO implement me
-	panic("implement me")
 }

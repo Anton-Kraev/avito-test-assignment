@@ -7,7 +7,7 @@ import (
 )
 
 type userRepo interface {
-	FindByName(ctx context.Context, name string) error
+	GetByName(ctx context.Context, name string) (models.User, error)
 	Insert(ctx context.Context, user models.User) error
 }
 
@@ -17,12 +17,4 @@ type Service struct {
 
 func NewService(userRepo userRepo) *Service {
 	return &Service{userRepo: userRepo}
-}
-
-// TODO: get default balance from config
-const initBalance = 200
-
-// TODO: create jwt token
-func createToken() (string, error) {
-	return "", nil
 }
