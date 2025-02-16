@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
+	errsdomain "github.com/Anton-Kraev/avito-test-assignment/internal/domain/errors"
 	"github.com/Anton-Kraev/avito-test-assignment/internal/domain/models"
 	"github.com/Anton-Kraev/avito-test-assignment/internal/lib/logger"
 	"github.com/Anton-Kraev/avito-test-assignment/openapi/api"
@@ -33,8 +35,18 @@ func (h Handler) PostApiAuth(ctx echo.Context) error {
 		Name:     req.Username,
 		Password: req.Password,
 	})
-	if err != nil {
-		errMsg := "authorization failed"
+
+	switch {
+	case errors.Is(err, errsdomain.ErrInvalidPassword):
+		if err != nil {
+			errMsg := "invalid password"
+
+			log.Error(errMsg, logger.Err(err))
+
+			return ctx.JSON(http.StatusUnauthorized, api.ErrorResponse{Errors: &errMsg})
+		}
+	case err != nil:
+		errMsg := "authentication failed"
 
 		log.Error(errMsg, logger.Err(err))
 
