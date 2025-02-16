@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/Anton-Kraev/avito-test-assignment/internal/logger"
+	"github.com/Anton-Kraev/avito-test-assignment/internal/lib/logger"
 	"github.com/Anton-Kraev/avito-test-assignment/openapi/api"
 )
 
